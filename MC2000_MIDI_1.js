@@ -253,8 +253,7 @@ if(deck>2){deck-=2;}
 };
 
 mc2000.setLed2 = function(deck,led,status) {
-	print('deck');
-print(deck);
+
 	if(deck<=2){
 	midi.sendShortMsg(0xB0+(deck-1), status==1 ? 0x50 : 0x51, led);
 } else {
@@ -552,10 +551,7 @@ mc2000.pflSetLed = function(value, group) {
 	var g =  mc2000.group2Deck(group); if(g>2){g-=2;}
 
 	var side = g == 1 ? 'l' : 'r';
-	print('side');
-	print(group);
-	print(mc2000.group2Deck(group));
-	print(side);
+
 	mc2000.setLed2(g,mc2000.leds["monitorcue_"+side],value);
 };
 
@@ -568,7 +564,7 @@ mc2000.cueSetLed = function(value, group) {
 };
 
 mc2000.keylockSetLed = function(value, group) {
-	print("KEYLOCKLED");
+
 	group = mc2000.group2Deck(group);
 	if(group>2){group-=2;}
 	mc2000.setLed(group,mc2000.leds["keylock"],value);
