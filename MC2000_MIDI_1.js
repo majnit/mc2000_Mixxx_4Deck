@@ -1,7 +1,7 @@
 /**
- * Denon MC2000 controller script for Mixxx v1.11.0
+ * Denon MC2000 4 deck controller script for Mixxx v2.1
  *
- * Written by Esteban Serrano Roloff.
+ * Based on work by Esteban Serrano Roloff.
  *
  * 2014/03/2 V0.6.2 :	Functional & relatively untested version.
  *			Bug where play control would	become unresponsive after pressing hotcues fixed.
