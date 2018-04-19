@@ -43,7 +43,7 @@
                 <status>0x81</status>
                 <midino>0x6A</midino>
                 <options>
-                  <script-binding/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -52,7 +52,7 @@
                 <status>0x80</status>
                 <midino>0x69</midino>
                 <options>
-                  <script-binding/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -61,7 +61,7 @@
                 <status>0x81</status>
                 <midino>0x69</midino>
                 <options>
-                  <script-binding/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -129,38 +129,38 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>loop_double</key>
+                <key>mc2000.loop_double</key>
                 <status>0x90</status>
                 <midino>0x6A</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>loop_double</key>
+                <key>mc2000.loop_double</key>
                 <status>0x91</status>
                 <midino>0x6A</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>loop_halve</key>
+                <key>mc2000.loop_halve</key>
                 <status>0x90</status>
                 <midino>0x69</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>loop_halve</key>
+                <key>mc2000.loop_halve</key>
                 <status>0x91</status>
                 <midino>0x69</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -192,11 +192,11 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>beatloop_2_toggle</key>
+                <key>mc2000.beatloop_2_toggle</key>
                 <status>0x80</status>
                 <midino>0x55</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -210,11 +210,11 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>beatloop_8_toggle</key>
+                <key>mc2000.beatloop_8_toggle</key>
                 <status>0x80</status>
                 <midino>0x53</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -228,11 +228,11 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>beatloop_4_toggle</key>
+                <key>mc2000.beatloop_4_toggle</key>
                 <status>0x80</status>
                 <midino>0x52</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -291,20 +291,20 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>beatloop_2_toggle</key>
+                <key>mc2000.beatloop_2_toggle</key>
                 <status>0x90</status>
                 <midino>0x55</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>beatloop_8_toggle</key>
+                <key>mc2000.beatloop_8_toggle</key>
                 <status>0x90</status>
                 <midino>0x53</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -318,11 +318,11 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>beatloop_4_toggle</key>
+                <key>mc2000.beatloop_4_toggle</key>
                 <status>0x90</status>
                 <midino>0x52</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -766,24 +766,7 @@
                     <script-binding/>
                 </options>
             </control>
-            <control>
-                <group>[Channel1]</group>
-                <key>reloop_exit</key>
-                <status>0x80</status>
-                <midino>0x1D</midino>
-                <options>
-                    <normal/>
-                </options>
-            </control>
-            <control>
-                <group>[Channel2]</group>
-                <key>reloop_exit</key>
-                <status>0x81</status>
-                <midino>0x1D</midino>
-                <options>
-                    <normal/>
-                </options>
-            </control>
+
             <control>
                 <group>[Samplers]</group>
                 <key>show_samplers</key>
@@ -867,11 +850,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>beatloop_2_toggle</key>
+                <key>mc2000.beatloop_2_toggle</key>
                 <status>0x80</status>
                 <midino>0x15</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -894,11 +877,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>beatloop_8_toggle</key>
+                <key>mc2000.beatloop_8_toggle</key>
                 <status>0x80</status>
                 <midino>0x13</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -921,11 +904,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>beatloop_4_toggle</key>
+                <key>mc2000.beatloop_4_toggle</key>
                 <status>0x80</status>
                 <midino>0x12</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -975,11 +958,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>reloop_exit</key>
+                <key>mc2000.reloop_exit</key>
                 <status>0x90</status>
                 <midino>0x1D</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -1002,11 +985,11 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>reloop_exit</key>
+                <key>mc2000.reloop_exit</key>
                 <status>0x91</status>
                 <midino>0x1D</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -1083,11 +1066,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>beatloop_2_toggle</key>
+                <key>mc2000.beatloop_2_toggle</key>
                 <status>0x90</status>
                 <midino>0x15</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -1101,20 +1084,20 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>beatloop_8_toggle</key>
+                <key>mc2000.beatloop_8_toggle</key>
                 <status>0x90</status>
                 <midino>0x13</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>beatloop_4_toggle</key>
+                <key>mc2000.beatloop_4_toggle</key>
                 <status>0x90</status>
                 <midino>0x12</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -1164,20 +1147,20 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>keylock</key>
+                <key>mc2000.slipmode</key>
                 <status>0x90</status>
                 <midino>0x06</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>keylock</key>
+                <key>mc2000.slipmode</key>
                 <status>0x91</status>
                 <midino>0x06</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -1272,11 +1255,11 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>pregain</key>
+                <key>mc2000.pregain</key>
                 <status>0xB1</status>
                 <midino>0x0C</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -1317,11 +1300,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>pregain</key>
+                <key>mc2000.pregain</key>
                 <status>0xB0</status>
                 <midino>0x01</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>

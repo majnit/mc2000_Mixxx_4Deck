@@ -81,7 +81,7 @@ mc2000.init = function(id, debug) {
 	for (i=1; i<=4; i++) {
 
 		// Key lock
-		engine.connectControl("[Channel"+i+"]", "keylock", "mc2000.keylockSetLed");
+		engine.connectControl("[Channel"+i+"]", "slip_enabled", "mc2000.keylockSetLed");
 		// Sync
 		engine.connectControl("[Channel"+i+"]", "beat_active", "mc2000.beatActiveSetLed");
 
@@ -120,6 +120,7 @@ mc2000.init = function(id, debug) {
 		engine.connectControl("[Sampler"+i+"]","play","mc2000.sampleXSetLed");
 		engine.softTakeover("[Channel"+i+"]", 'volume', true);
 		engine.softTakeover("[Channel"+i+"]", 'rate', true);
+		engine.softTakeover("[Channel"+i+"]", 'pregain', true);
 		engine.softTakeover("[EqualizerRack1_[Channel"+i+"]_Effect1]", "parameter1",true);
 		engine.softTakeover("[EqualizerRack1_[Channel"+i+"]_Effect1]", "parameter2",true);
 		engine.softTakeover("[EqualizerRack1_[Channel"+i+"]_Effect1]", "parameter3",true);
@@ -159,7 +160,6 @@ mc2000.buttons['[Channel4]'] = mc2000.buttons['[Channel2]'] // Copy [Channel2] t
 
 mc2000.channelRegEx = /\[Channel(\d+)\]/;
 
-
 mc2000.initDeck = function (group) { // This function is not mapped to a MIDI signal; it is only called by this script in the init and deckToggleButton functions
     // Execute code to set up the controller for manipulating a deck
     // Putting this code in a function allows you to call the same code from the script's init function and the deckToggleButton function without having to copy and paste code
@@ -171,37 +171,42 @@ mc2000.initDeck = function (group) { // This function is not mapped to a MIDI si
     } else {
         disconnectDeck -= 2
     }
-  //  mc2000.connectDeckControls('[Channel'+disconnectDeck+']', true) // disconnect old deck's Mixxx controls from LEDs. This function is defined below.
 
 		engine.softTakeoverIgnoreNextValue("[Channel"+disconnectDeck+"]", "volume");
 		engine.softTakeoverIgnoreNextValue("[Channel"+disconnectDeck+"]", "rate");
+		engine.softTakeoverIgnoreNextValue("[Channel"+disconnectDeck+"]", "pregain");
 		engine.softTakeoverIgnoreNextValue("[EqualizerRack1_[Channel"+disconnectDeck+"]_Effect1]", "parameter1");
 		engine.softTakeoverIgnoreNextValue("[EqualizerRack1_[Channel"+disconnectDeck+"]_Effect1]", "parameter2");
 		engine.softTakeoverIgnoreNextValue("[EqualizerRack1_[Channel"+disconnectDeck+"]_Effect1]", "parameter3");
 		mc2000.connectDeckControls(group) // connect new deck's Mixxx controls to LEDs
-
     // Toggle LED that indicates which deck is being controlled
 		engine.setValue(group, 'vinylcontrol_status', !(engine.getValue(group, 'vinylcontrol_status')));
 }
 
-mc2000.connectDeckControls = function (group, remove) { // This function is not mapped to a MIDI signal; it is only called by this script in the initDeck function below
-    // This function either connects or disconnects automatic reactions to changes in Mixxx (see wiki section above), depending on the value of the 'remove' parameter
-    // Putting this in its own function allows the same code to be reused for both connecting and disconnecting
-    // This is particularly helpful when the list of Mixxx controls connected to LEDs is long
-	//	mc2000.playSetLed(engine.getValue(group,'play'), group);
+mc2000.connectDeckControls = function (group) {
 
-    remove = (typeof remove !== 'undefined') ? remove : false // If the 'remove' parameter is not passed to this function, set remove = false
-    var controlsToFunctions = { // This hash table maps Mixxx controls to the script functions (not shown in this example) that control LEDs that react to changes in those controls
+
+// This hash table maps Mixxx controls to the script functions (not shown in this example) that control LEDs that react to changes in those controls
+		var controlsToFunctions = {
         'play': 'mc2000.playSetLed',
 				'beat_active':'mc2000.beatActiveSetLed',
-				'pfl':'mc2000.pflSetLed'
-
-        // ... and any other functions that react to changes in Mixxx controls for a deck
+				'pfl':'mc2000.pflSetLed',
+				'loop_start_position': 'mc2000.loopStartSetLed',
+				'loop_end_position': 'mc2000.loopEndSetLed',
+				'loop_enabled': 'mc2000.loopEnableSetLed',
+				'beatloop_2_enabled': 'mc2000.beatLoopXSetLed',
+ 				'beatloop_4_enabled': 'mc2000.beatLoopXSetLed',
+ 				'beatloop_8_enabled':'mc2000.beatLoopXSetLed',
+				'hotcue_1_enabled':'mc2000.hotcueSetLed',
+				'hotcue_2_enabled':'mc2000.hotcueSetLed',
+				'hotcue_3_enabled':'mc2000.hotcueSetLed',
+				'hotcue_4_enabled':'mc2000.hotcueSetLed',
+				'slip_enabled':'mc2000.keylockSetLed'
     }
 engine.connectControl(group,'beat_active',true);
     for (var control in controlsToFunctions) { // For each property (key: value pair) in controlsToFunctions, control = that property of controlsToFunctions
                                                // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
-eval(controlsToFunctions[control])(engine.getValue(group,control), group);
+eval(controlsToFunctions[control])(engine.getValue(group,control), group,control);
 
     }
 }
@@ -211,8 +216,6 @@ mc2000.shutdown = function(id) {
 	// Put all LEDs on default state.
 	mc2000.allLed2Default();
 };
-
-
 
 
 // === FOR MANAGING LEDS ===
@@ -289,7 +292,7 @@ mc2000.shift = function(channel, control, value, status, group) {
 
 	// Change LED states if action is possible
 	mc2000.triggerAllSampleReplayControls();
-	mc2000.triggerAllHotcueControls();
+	//mc2000.triggerAllHotcueControls();
 
 };
 
@@ -483,11 +486,6 @@ mc2000.hotcueActivateOrDelete = function(channel, control, value, status, group)
 	}
 };
 
-
-
-
-
-
 // === JOG WHEEL ===
 
 // The button that enables/disables scratching
@@ -518,23 +516,17 @@ mc2000.wheelTurn = function(channel, control, value, status, group) {
 	group = mc2000.deck[group];
 
 var deck = mc2000.group2Deck(group);
-/**
-print("DECK");
-print(deck);
-print(group);
-print("DECK");
-**/
+
    var newValue=(value-64);
 
-    // In either case, register the movement
     engine.scratchTick(deck,newValue);
  if ( engine.isScratching(deck)) {
-	// print("SCRATCHING")
+
 engine.scratchTick(deck,newValue);
   }
 else {
  if (engine.getValue(group,"play") != 0) {
-//print('jog');
+
 engine.setValue(group,"jog", (value-0x40)/10);
                           }
  }
@@ -564,7 +556,7 @@ mc2000.pflSetLed = function(value, group) {
 	print(group);
 	print(mc2000.group2Deck(group));
 	print(side);
-	mc2000.setLed2(mc2000.group2Deck(group),mc2000.leds["monitorcue_"+side],value);
+	mc2000.setLed2(g,mc2000.leds["monitorcue_"+side],value);
 };
 
 mc2000.playSetLed = function(value, group) {
@@ -572,30 +564,37 @@ mc2000.playSetLed = function(value, group) {
 };
 
 mc2000.cueSetLed = function(value, group) {
-	 // group = mc2000.deck[group];
-	mc2000.setLed(mc2000.group2Deck(group),mc2000.leds["cue"],value);
+		mc2000.setLed(mc2000.group2Deck(group),mc2000.leds["cue"],value);
 };
 
 mc2000.keylockSetLed = function(value, group) {
+	print("KEYLOCKLED");
 	group = mc2000.group2Deck(group);
 	if(group>2){group-=2;}
 	mc2000.setLed(group,mc2000.leds["keylock"],value);
 };
 
 mc2000.loopStartSetLed = function (value, group) {
-	mc2000.setLed(mc2000.group2Deck(group),mc2000.leds["loopin"],value == -1 ? false: true);
+	var deck = mc2000.group2Deck(group);
+	if(deck>2){deck-=2;}
+	mc2000.setLed(deck,mc2000.leds["loopin"],value == -1 ? false: true);
 };
 
 mc2000.loopEndSetLed = function (value, group) {
-	mc2000.setLed(mc2000.group2Deck(group),mc2000.leds["loopout"],value == -1 ? false: true);
+	var deck = mc2000.group2Deck(group);
+	if(deck>2){deck-=2;}
+	mc2000.setLed(deck,mc2000.leds["loopout"],value == -1 ? false: true);
 };
 
 mc2000.loopEnableSetLed = function(value, group, control) {
-	mc2000.setLed(mc2000.group2Deck(group),mc2000.leds["autoloop"],value);
+	var deck = mc2000.group2Deck(group);
+	if(deck>2){deck-=2;}
+	mc2000.setLed(deck,mc2000.leds["autoloop"],value);
 };
 
 mc2000.beatLoopXSetLed = function(value, group, control) {
-	var deck = mc2000.group2Deck(group);
+
+	var deck = mc2000.group2Deck(group);if(deck>2){deck-=2;}
 	var noEfx = mc2000.loop2NoEfx(control[9]);
 
 	// From the spec, all fx leds are in MIDI CH1 range.
@@ -624,7 +623,7 @@ mc2000.beatActiveSetLed = function (value, group){
 };
 
 mc2000.playButton = function (channel, control, value, status, group) {
-    group = mc2000.deck[group];
+		group = mc2000.deck[group];
     if (value) {
   engine.setValue(group, 'play', !(engine.getValue(group, 'play')));
 }
@@ -639,6 +638,15 @@ mc2000.volume = function (channel, control, value, status, group) {
 
 };
 
+mc2000.pregain = function (channel, control, value, status, group) {
+    group = mc2000.deck[group];
+
+		//	engine.softTakeover(group, 'volume', true);
+  engine.setParameter(group, "pregain", script.absoluteLin(value,0,1));
+//  engine.setValue(group, 'pregain', script.absoluteLin(value, 0, 4));
+
+};
+
 mc2000.rate = function (channel, control, value, status, group) {
     group = mc2000.deck[group];
     if (value) {
@@ -649,9 +657,13 @@ mc2000.rate = function (channel, control, value, status, group) {
 };
 mc2000.loadSelectedTrack = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
+
+		if (mc2000.state["shift"] === true) {
+			group = group.replace('Channel','Sampler');
+		}
 	engine.setValue(group, "LoadSelectedTrack", 1);
-		//	 engine.setValue(group, "LoadSelectedTrack", 0);
-			 		 engine.setValue(group, "pfl", 1);
+	engine.setValue(group, "pfl", 1);
+
 
 }
 
@@ -666,6 +678,13 @@ mc2000.pfl = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 	if(value){
 	engine.setValue(group, "pfl", !(engine.getValue(group, 'pfl')));
+}
+}
+
+mc2000.slipmode = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+	if(value){
+	engine.setValue(group, "slip_enabled", !(engine.getValue(group, 'slip_enabled')));
 }
 }
 mc2000.cue_default = function(channel, control, value, status, group) {
@@ -709,7 +728,6 @@ mc2000.loop_double = function(channel, control, value, status, group) {
 	if(value){
 	engine.setValue(group, "loop_double", 1);
 }
-
 }
 
 mc2000.loop_halve = function(channel, control, value, status, group) {
@@ -717,5 +735,28 @@ mc2000.loop_halve = function(channel, control, value, status, group) {
 	if(value){
 	engine.setValue(group, "loop_halve", 1);
 }
+}
 
+mc2000.beatloop_2_toggle = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+
+	engine.setValue(group, "beatloop_2_toggle", !(engine.getValue(group, 'beatloop_2_toggle')));
+
+}
+
+mc2000.beatloop_4_toggle = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+
+	engine.setValue(group, "beatloop_4_toggle", !(engine.getValue(group, 'beatloop_4_toggle')));
+
+}
+mc2000.beatloop_8_toggle = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+
+	engine.setValue(group, "beatloop_8_toggle", !(engine.getValue(group, 'beatloop_8_toggle')));
+}
+
+mc2000.reloop_exit = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+	engine.setValue(group, "reloop_exit", 1);
 }
