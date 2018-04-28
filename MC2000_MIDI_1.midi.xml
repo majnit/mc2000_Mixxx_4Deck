@@ -66,20 +66,20 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>flanger</key>
+                <key>mc2000.quantize</key>
                 <status>0x80</status>
                 <midino>0x67</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>flanger</key>
+                <key>mc2000.quantize</key>
                 <status>0x80</status>
                 <midino>0x64</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -165,11 +165,11 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>flanger</key>
+                <key>mc2000.quantize</key>
                 <status>0x90</status>
                 <midino>0x67</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -201,11 +201,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>flanger</key>
+                <key>mc2000.quantize</key>
                 <status>0x90</status>
                 <midino>0x64</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -345,11 +345,11 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>bpm_tap</key>
+                <key>mc2000.slipmode</key>
                 <status>0x80</status>
                 <midino>0x41</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -372,11 +372,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>bpm_tap</key>
+                <key>mc2000.slipmode</key>
                 <status>0x80</status>
                 <midino>0x40</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -390,38 +390,38 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>loop_out</key>
+                <key>mc2000.loop_out</key>
                 <status>0x80</status>
                 <midino>0x39</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>loop_out</key>
+                <key>mc2000.loop_out</key>
                 <status>0x81</status>
                 <midino>0x39</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>loop_in</key>
+                <key>mc2000.loop_in</key>
                 <status>0x80</status>
                 <midino>0x37</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>loop_in</key>
+                <key>mc2000.loop_in</key>
                 <status>0x81</status>
                 <midino>0x37</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -434,12 +434,12 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler4]</group>
-                <key>LoadSelectedTrack</key>
+                <group>[Channel2]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x81</status>
                 <midino>0x34</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -461,12 +461,12 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler3]</group>
-                <key>LoadSelectedTrack</key>
+                <group>[Channel2]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x81</status>
                 <midino>0x33</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -480,38 +480,38 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>bpm_tap</key>
+                <key>mc2000.slipmode</key>
                 <status>0x90</status>
                 <midino>0x41</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Sampler2]</group>
-                <key>LoadSelectedTrack</key>
+                <group>[Channel2]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x81</status>
                 <midino>0x32</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>bpm_tap</key>
+                <key>mc2000.slipmode</key>
                 <status>0x90</status>
                 <midino>0x40</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Sampler1]</group>
-                <key>LoadSelectedTrack</key>
+                <group>[Channel2]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x81</status>
                 <midino>0x31</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -533,6 +533,15 @@
                 </options>
             </control>
             <control>
+                <group>[Channel2]</group>
+                <key>mc2000.quickfx</key>
+                <status>0xB0</status>
+                <midino>0x5B</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
                 <group>[Playlist]</group>
                 <key>SelectNextPlaylist</key>
                 <status>0x80</status>
@@ -543,11 +552,11 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>loop_out</key>
+                <key>mc2000.loop_out</key>
                 <status>0x90</status>
                 <midino>0x39</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -570,61 +579,43 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>loop_out</key>
+                <key>mc2000.loop_out</key>
                 <status>0x91</status>
                 <midino>0x39</midino>
                 <options>
-                    <normal/>
-                </options>
-            </control>
-            <control>
-                <group>[Flanger]</group>
-                <key>lfoDelay</key>
-                <status>0xB0</status>
-                <midino>0x57</midino>
-                <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>loop_in</key>
+                <key>mc2000.loop_in</key>
                 <status>0x90</status>
                 <midino>0x37</midino>
                 <options>
-                    <normal/>
-                </options>
-            </control>
-            <control>
-                <group>[Flanger]</group>
-                <key>lfoDepth</key>
-                <status>0xB0</status>
-                <midino>0x56</midino>
-                <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>loop_in</key>
+                <key>mc2000.loop_in</key>
                 <status>0x91</status>
                 <midino>0x37</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Flanger]</group>
-                <key>lfoPeriod</key>
+                <group>[Channel1]</group>
+                <key>mc2000.quickfx</key>
                 <status>0xB0</status>
                 <midino>0x55</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Sampler4]</group>
-                <key>mc2000.replayOrStopSample</key>
+                <group>[Channel1]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x80</status>
                 <midino>0x24</midino>
                 <options>
@@ -641,8 +632,8 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler3]</group>
-                <key>mc2000.replayOrStopSample</key>
+                <group>[Channel1]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x80</status>
                 <midino>0x23</midino>
                 <options>
@@ -650,17 +641,17 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler4]</group>
-                <key>LoadSelectedTrack</key>
+                <group>[Channel2]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x91</status>
                 <midino>0x34</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Sampler2]</group>
-                <key>mc2000.replayOrStopSample</key>
+                <group>[Channel1]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x80</status>
                 <midino>0x22</midino>
                 <options>
@@ -677,17 +668,17 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler3]</group>
-                <key>LoadSelectedTrack</key>
+                <group>[Channel2]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x91</status>
                 <midino>0x33</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
-                <group>[Sampler1]</group>
-                <key>mc2000.replayOrStopSample</key>
+                <group>[Channel1]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x80</status>
                 <midino>0x21</midino>
                 <options>
@@ -713,12 +704,12 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler2]</group>
-                <key>LoadSelectedTrack</key>
+                <group>[Channel2]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x91</status>
                 <midino>0x32</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -740,12 +731,12 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler1]</group>
-                <key>LoadSelectedTrack</key>
+                <group>[Channel2]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x91</status>
                 <midino>0x31</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -766,14 +757,13 @@
                     <script-binding/>
                 </options>
             </control>
-
             <control>
-                <group>[Samplers]</group>
-                <key>show_samplers</key>
+                <group>[Channel1]</group>
+                <key>mc2000.effects</key>
                 <status>0x80</status>
                 <midino>0x1A</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -783,6 +773,15 @@
                 <midino>0x29</midino>
                 <options>
                     <normal/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>mc2000.effects</key>
+                <status>0x81</status>
+                <midino>0x1A</midino>
+                <options>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -867,8 +866,8 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler4]</group>
-                <key>mc2000.replayOrStopSample</key>
+                <group>[Channel1]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x90</status>
                 <midino>0x24</midino>
                 <options>
@@ -894,8 +893,8 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler3]</group>
-                <key>mc2000.replayOrStopSample</key>
+                <group>[Channel1]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x90</status>
                 <midino>0x23</midino>
                 <options>
@@ -912,8 +911,8 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler2]</group>
-                <key>mc2000.replayOrStopSample</key>
+                <group>[Channel1]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x90</status>
                 <midino>0x22</midino>
                 <options>
@@ -921,8 +920,8 @@
                 </options>
             </control>
             <control>
-                <group>[Sampler1]</group>
-                <key>mc2000.replayOrStopSample</key>
+                <group>[Channel1]</group>
+                <key>mc2000.fxtoggle</key>
                 <status>0x90</status>
                 <midino>0x21</midino>
                 <options>
@@ -1002,12 +1001,21 @@
                 </options>
             </control>
             <control>
-                <group>[Samplers]</group>
-                <key>show_samplers</key>
+                <group>[Channel1]</group>
+                <key>mc2000.effects</key>
                 <status>0x90</status>
                 <midino>0x1A</midino>
                 <options>
-                    <normal/>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>mc2000.effects</key>
+                <status>0x91</status>
+                <midino>0x1A</midino>
+                <options>
+                    <script-binding/>
                 </options>
             </control>
             <control>
@@ -1147,7 +1155,7 @@
             </control>
             <control>
                 <group>[Channel1]</group>
-                <key>mc2000.slipmode</key>
+                <key>mc2000.keylock</key>
                 <status>0x90</status>
                 <midino>0x06</midino>
                 <options>
@@ -1156,7 +1164,7 @@
             </control>
             <control>
                 <group>[Channel2]</group>
-                <key>mc2000.slipmode</key>
+                <key>mc2000.keylock</key>
                 <status>0x91</status>
                 <midino>0x06</midino>
                 <options>

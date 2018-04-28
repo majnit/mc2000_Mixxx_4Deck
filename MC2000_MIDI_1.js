@@ -37,7 +37,6 @@ mc2000.leds = {
 	samp1_r: 		65,
 	samp2_r: 		67,
 	samp3_r: 		69,
-
 	samp4_r: 		71,
 	samples_r: 		73,
 	cue: 			38,
@@ -58,8 +57,8 @@ mc2000.leds = {
 	monitorcue_l: 	69,
 	monitorcue_r: 	81
 };
-
-mc2000.state = {"shift": false, "shiftlock": false};
+mc2000.decks = ["_l","_r"];
+mc2000.state = {"shift": false, "shiftlock": false,"effects1":false,"effects2":false};
 mc2000.control2CueNo = { 0x17: 1, 0x18: 2, 0x19: 3, 0x20: 4 };
 
 var jog1divide = 0;
@@ -81,7 +80,7 @@ mc2000.init = function(id, debug) {
 	for (i=1; i<=4; i++) {
 
 		// Key lock
-		engine.connectControl("[Channel"+i+"]", "slip_enabled", "mc2000.keylockSetLed");
+		engine.connectControl("[Channel"+i+"]", "keylock", "mc2000.keylockSetLed");
 		// Sync
 		engine.connectControl("[Channel"+i+"]", "beat_active", "mc2000.beatActiveSetLed");
 
@@ -89,6 +88,7 @@ mc2000.init = function(id, debug) {
 		var j=0;
 		for (j=1;j<=4;j++) {
 			engine.connectControl("[Channel"+i+"]","hotcue_"+j+"_enabled","mc2000.hotcueSetLed");
+			engine.connectControl('[EffectRack1_EffectUnit'+j+']','group_[Channel'+i+']_enable','mc2000.sampleXSetLed');
 		}
 
 		// Cue
@@ -104,9 +104,9 @@ mc2000.init = function(id, debug) {
 		engine.connectControl("[Channel"+i+"]", "loop_enabled", "mc2000.loopEnableSetLed");
 
 		// FX 1-3
+		engine.connectControl("[Channel"+i+"]", "beatloop_1_enabled", "mc2000.beatLoopXSetLed");
 		engine.connectControl("[Channel"+i+"]", "beatloop_2_enabled", "mc2000.beatLoopXSetLed");
 		engine.connectControl("[Channel"+i+"]", "beatloop_4_enabled", "mc2000.beatLoopXSetLed");
-		engine.connectControl("[Channel"+i+"]", "beatloop_8_enabled", "mc2000.beatLoopXSetLed");
 
 		// Monitor cue
 		engine.connectControl("[Channel"+i+"]", "pfl", "mc2000.pflSetLed");
@@ -114,16 +114,15 @@ mc2000.init = function(id, debug) {
 	}
 
 
-	// ---- Controls for Samplers
-	// Samples 1-4 (Left)
 	for (i=1; i<=4; i++) {
-		engine.connectControl("[Sampler"+i+"]","play","mc2000.sampleXSetLed");
 		engine.softTakeover("[Channel"+i+"]", 'volume', true);
 		engine.softTakeover("[Channel"+i+"]", 'rate', true);
 		engine.softTakeover("[Channel"+i+"]", 'pregain', true);
 		engine.softTakeover("[EqualizerRack1_[Channel"+i+"]_Effect1]", "parameter1",true);
 		engine.softTakeover("[EqualizerRack1_[Channel"+i+"]_Effect1]", "parameter2",true);
 		engine.softTakeover("[EqualizerRack1_[Channel"+i+"]_Effect1]", "parameter3",true);
+		engine.softTakeover("[QuickEffectRack1_[Channel"+i+"]", "super1",true);
+
 	}
 	// Soft takeover for faders
 
@@ -178,13 +177,20 @@ mc2000.initDeck = function (group) { // This function is not mapped to a MIDI si
 		engine.softTakeoverIgnoreNextValue("[EqualizerRack1_[Channel"+disconnectDeck+"]_Effect1]", "parameter1");
 		engine.softTakeoverIgnoreNextValue("[EqualizerRack1_[Channel"+disconnectDeck+"]_Effect1]", "parameter2");
 		engine.softTakeoverIgnoreNextValue("[EqualizerRack1_[Channel"+disconnectDeck+"]_Effect1]", "parameter3");
+		engine.softTakeoverIgnoreNextValue("[QuickEffectRack1_[Channel"+disconnectDeck+"]]", "super1",true);
 		mc2000.connectDeckControls(group) // connect new deck's Mixxx controls to LEDs
     // Toggle LED that indicates which deck is being controlled
-		engine.setValue(group, 'vinylcontrol_status', !(engine.getValue(group, 'vinylcontrol_status')));
+		//engine.setValue(group, 'vinylcontrol_status', !(engine.getValue(group, 'vinylcontrol_status')));
 }
 
 mc2000.connectDeckControls = function (group) {
 
+var channel = group[8];
+	if(channel>2){channel-=2;}
+	for (j=1; j<=4; j++) {
+	var _channel = mc2000.decks[channel-1];
+			mc2000.setLed(channel,mc2000.leds["samp"+j+_channel],engine.getValue('[EffectRack1_EffectUnit'+j+']','group_'+group+'_enable'));
+	}
 
 // This hash table maps Mixxx controls to the script functions (not shown in this example) that control LEDs that react to changes in those controls
 		var controlsToFunctions = {
@@ -194,16 +200,18 @@ mc2000.connectDeckControls = function (group) {
 				'loop_start_position': 'mc2000.loopStartSetLed',
 				'loop_end_position': 'mc2000.loopEndSetLed',
 				'loop_enabled': 'mc2000.loopEnableSetLed',
-				'beatloop_2_enabled': 'mc2000.beatLoopXSetLed',
- 				'beatloop_4_enabled': 'mc2000.beatLoopXSetLed',
- 				'beatloop_8_enabled':'mc2000.beatLoopXSetLed',
+				'beatloop_1_enabled': 'mc2000.beatLoopXSetLed',
+ 				'beatloop_2_enabled': 'mc2000.beatLoopXSetLed',
+ 				'beatloop_4_enabled':'mc2000.beatLoopXSetLed',
 				'hotcue_1_enabled':'mc2000.hotcueSetLed',
 				'hotcue_2_enabled':'mc2000.hotcueSetLed',
 				'hotcue_3_enabled':'mc2000.hotcueSetLed',
 				'hotcue_4_enabled':'mc2000.hotcueSetLed',
-				'slip_enabled':'mc2000.keylockSetLed'
+				'keylock':'mc2000.keylockSetLed',
+
     }
 engine.connectControl(group,'beat_active',true);
+
     for (var control in controlsToFunctions) { // For each property (key: value pair) in controlsToFunctions, control = that property of controlsToFunctions
                                                // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
 eval(controlsToFunctions[control])(engine.getValue(group,control), group,control);
@@ -279,8 +287,11 @@ mc2000.group2Deck = function(group) {
 
 mc2000.loop2NoEfx = function(nbloop) {
 	if (nbloop==1) nbloop=16;
-	return Math.log(nbloop)/Math.log(2); //2 4 8 16 -> 1 2 3 4
+	var v = (Math.log(nbloop)/Math.log(2));
+ //2 4 8 16 -> 1 2 3 4
+	return v;
 };
+
 
 
 
@@ -290,10 +301,11 @@ mc2000.shift = function(channel, control, value, status, group) {
 	mc2000.state["shift"] = (status === 0x90);
 
 	// Change LED states if action is possible
-	mc2000.triggerAllSampleReplayControls();
+	//mc2000.triggerAllSampleReplayControls();
 	//mc2000.triggerAllHotcueControls();
 
 };
+
 
 mc2000.triggerAllSampleReplayControls = function(){
 	var sampNo=0;
@@ -389,79 +401,30 @@ group = mc2000.deck[group];
 };
 
 
-mc2000.replayOrStopSample = function(channel, control, value, status, group) {
-	if ((status & 0xF0) === 0x90) {    // If button down
-		if (mc2000.state["shift"] === true) {
-			// If shift is pressed, stop
-			engine.setValue(group, "start_stop", true);
-		}else{
-			// Play from start
-			engine.setValue(group, "start_play", true);
-		}
-	}
-};
-
 mc2000.beatsKnobTurn = function(channel, control, value, status, group) {
 	// Knob turning direction
-	var fwd = false;
+		var fwd = false;
 	if (value === 0x01){
 		fwd = true;
 	}
+	group = mc2000.deck[group];
+	var size =engine.getValue(group,'beatloop_size');
+
 	// Different action if shift down
 	if (mc2000.state["shift"] === true) {
 		// If shift is pressed, adjust the samplers volume (currently all of them will be updated at the same time)
-		var volStep = 1.0/16;
+		if(fwd)
+		{engine.setParameter(group, "loop_move_"+size+"_forward", 1);}
+		else
+		 {engine.setParameter(group, "loop_move_"+size+"_backward", 1);}
 
-		var sampNo=0;
-		for (sampNo=1; sampNo<=4; sampNo++){
-			mc2000.stepSampVol(sampNo, fwd, volStep);
-		}
-	}else{
-		// Jump 1 beat forward or backward
-		mc2000.beatJump(group, 1, fwd);
+	} else {
+		if(fwd)
+		{engine.setParameter(group, "beatloop_size", size*2);}
+		else
+		{engine.setParameter(group, "beatloop_size", size/2);}
+
 	}
-};
-
-
-mc2000.beatJump = function(group, beats, forward){
-	var cursample = engine.getValue(group, "playposition") * engine.getValue(group, "track_samples");
-
-	var backseconds = beats * (60 / engine.getValue(group, "bpm"));
-
-	// *2 to compensate for stereo samples
-	var backsamples = backseconds*engine.getValue(group, "track_samplerate")*2;
-
-	if (forward === true){
-		var newpos = cursample + (backsamples);
-	}else{
-		var newpos = cursample - (backsamples);
-	}
-
-	engine.setValue(group, "playposition", newpos/engine.getValue(group, "track_samples"));
-};
-
-
-mc2000.stepSampVol = function(sampNo, fwd, volStep){
-	// Get current volume value
-	var curVol = engine.getValue("[Sampler"+sampNo+"]","volume");
-
-	// Calculate new value from the current value and step
-	if (fwd === true){
-		var newVol = curVol + volStep;
-	}else{
-		var newVol = curVol - volStep;
-	}
-
-	// Ensure it is in valid range
-	if (newVol > 1.0){
-		newVol = 1.0;
-	}else if(newVol < 0.0){
-		newVol = 0.0;
-	}
-
-	// Set new value for volume
-	engine.setValue("[Sampler"+sampNo+"]","volume",newVol);
-
 };
 
 
@@ -591,7 +554,7 @@ mc2000.loopEnableSetLed = function(value, group, control) {
 mc2000.beatLoopXSetLed = function(value, group, control) {
 
 	var deck = mc2000.group2Deck(group);if(deck>2){deck-=2;}
-	var noEfx = mc2000.loop2NoEfx(control[9]);
+	var noEfx = mc2000.loop2NoEfx(control[9]*2);
 
 	// From the spec, all fx leds are in MIDI CH1 range.
 	// First parameter is hardcoded.
@@ -599,24 +562,33 @@ mc2000.beatLoopXSetLed = function(value, group, control) {
 };
 
 mc2000.sampleXSetLed = function(value, group, control) {
-	// Sampler number can be hardcoded since group is e.g. "[Sampler2]", and at most one digit (for now).
-	var noSamp = group[8];
 
+ var deck = control[14]
+ if(deck>2){deck-=2;}
+ var channel = mc2000.decks[deck-1];
+var noSamp = group[23];
 	// If in shift mode, currently playing samples should blink,
 	// which indicates they can be stopped by pressing the blinking button.
 	if (mc2000.state["shift"] === true && value === 1) {
 		value = 2;
 	}
 
-	// All 4 available samples are on the left deck.
-	// This means the first parameter (deck) can be hardcoded,
-	// as well as the _l (suffix) on the led array key.
-	mc2000.setLed(1,mc2000.leds["samp"+noSamp+"_l"],value);
+	mc2000.setLed(deck,mc2000.leds["samp"+noSamp+channel],value);
 };
 
 mc2000.beatActiveSetLed = function (value, group){
 	mc2000.setLed(mc2000.group2Deck(group),mc2000.leds["sync"],value);
 };
+
+mc2000.fxtoggle = function (channel, control, value, status, group) {
+	group = 'group_'+mc2000.deck[group]+'_enable';
+	unit = '[EffectRack1_EffectUnit'+control%16+']';
+
+	if (value) {
+			engine.setValue(unit,group,!engine.getValue(unit,group))
+}
+}
+
 
 mc2000.playButton = function (channel, control, value, status, group) {
 		group = mc2000.deck[group];
@@ -640,9 +612,20 @@ mc2000.pregain = function (channel, control, value, status, group) {
 		//	engine.softTakeover(group, 'volume', true);
   engine.setParameter(group, "pregain", script.absoluteLin(value,0,1));
 //  engine.setValue(group, 'pregain', script.absoluteLin(value, 0, 4));
-
 };
-
+mc2000.effects = function (channel, control, value, status, group) {
+	if(value){
+  group = mc2000.deck[group];
+	var deck = group[8];
+	if(deck>2){deck-=2;}
+	var channel = mc2000.decks[group[8]-1];
+	mc2000.state["effects1"] = (status === 0x90);
+	mc2000.state["effects2"] = (status === 0x91);
+		for (i=1; i<=4; i++) {
+				mc2000.setLed(deck,mc2000.leds["samp"+i+channel],engine.getValue('[EffectRack1_EffectUnit'+i+']','group_'+group+'_enable'));
+		}
+}
+}
 mc2000.rate = function (channel, control, value, status, group) {
     group = mc2000.deck[group];
     if (value) {
@@ -655,10 +638,13 @@ mc2000.loadSelectedTrack = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 
 		if (mc2000.state["shift"] === true) {
-			group = group.replace('Channel','Sampler');
-		}
+	//		group = group.replace('Channel','Sampler');
+		//	engine.setValue(group, "LoadSelectedTrack", 1);
+		//	engine.setValue(group, "beatsync", 1);
+		} else {
 	engine.setValue(group, "LoadSelectedTrack", 1);
 	engine.setValue(group, "pfl", 1);
+}
 
 
 }
@@ -683,6 +669,21 @@ mc2000.slipmode = function(channel, control, value, status, group) {
 	engine.setValue(group, "slip_enabled", !(engine.getValue(group, 'slip_enabled')));
 }
 }
+
+mc2000.quantize = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+	if(value){
+	engine.setValue(group, "quantize", !(engine.getValue(group, 'quantize')));
+}
+}
+
+mc2000.keylock = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+	if(value){
+	engine.setValue(group, "keylock", !(engine.getValue(group, 'keylock')));
+}
+}
+
 mc2000.cue_default = function(channel, control, value, status, group) {
 	group = mc2000.deck[group];
 	if(value){
@@ -715,6 +716,14 @@ mc2000.filterLow = function (channel, control, value, status, group) {
     if (value) {
 engine.softTakeover("[EqualizerRack1_"+group+"_Effect1]", "parameter1",true);
 		engine.setParameter("[EqualizerRack1_"+group+"_Effect1]", "parameter1", script.absoluteLin(value,0,.99));
+}
+};
+
+mc2000.quickfx = function (channel, control, value, status, group) {
+    group = mc2000.deck[group];
+    if (value) {
+engine.softTakeover("[QuickEffectRack1_"+group+"]", "super1",true);
+		engine.setParameter("[QuickEffectRack1_"+group+"]", "super1", script.absoluteLin(value,0,.99));
 
 }
 };
@@ -736,23 +745,41 @@ mc2000.loop_halve = function(channel, control, value, status, group) {
 mc2000.beatloop_2_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 
-	engine.setValue(group, "beatloop_2_toggle", !(engine.getValue(group, 'beatloop_2_toggle')));
+	engine.setValue(group, "beatloop_1_toggle", !(engine.getValue(group, 'beatloop_1_toggle')));
 
 }
 
 mc2000.beatloop_4_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 
-	engine.setValue(group, "beatloop_4_toggle", !(engine.getValue(group, 'beatloop_4_toggle')));
+	engine.setValue(group, "beatloop_2_toggle", !(engine.getValue(group, 'beatloop_2_toggle')));
 
 }
 mc2000.beatloop_8_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 
-	engine.setValue(group, "beatloop_8_toggle", !(engine.getValue(group, 'beatloop_8_toggle')));
+	engine.setValue(group, "beatloop_4_toggle", !(engine.getValue(group, 'beatloop_4_toggle')));
 }
 
 mc2000.reloop_exit = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 	engine.setValue(group, "reloop_exit", 1);
+}
+
+mc2000.loop_in = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+	if(value){
+engine.setParameter(group, "loop_in", 1);
+} else {
+	engine.setParameter(group, "loop_in", 0);
+}
+}
+
+mc2000.loop_out = function(channel, control, value, status, group) {
+  group = mc2000.deck[group];
+	if(value){
+engine.setParameter(group, "loop_out", 1);
+} else {
+	engine.setParameter(group, "loop_out", 0);
+}
 }
