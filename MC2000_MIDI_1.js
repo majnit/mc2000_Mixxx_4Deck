@@ -460,9 +460,9 @@ mc2000.wheelTouch = function(channel, control, value, status, group){
 
 				var alpha = 1.0/8;
         var beta = alpha/32;
-        var rpm = 150.0;
+        var rpm = 200.0;
         if (mc2000.state["shift"] === true) // If shift is pressed, do a fast search
-        	rpm = 40.0;
+        	rpm = 10.0;
 
         engine.scratchEnable(deck, 128, rpm, alpha, beta, true);
     }
@@ -489,7 +489,7 @@ engine.scratchTick(deck,newValue);
 else {
  if (engine.getValue(group,"play") != 0) {
 
-engine.setValue(group,"jog", (value-0x40)/10);
+engine.setValue(group,"jog", (value-0x40)/8);
                           }
  }
 };
@@ -592,8 +592,14 @@ mc2000.fxtoggle = function (channel, control, value, status, group) {
 
 mc2000.playButton = function (channel, control, value, status, group) {
 		group = mc2000.deck[group];
+		var playing = engine.getValue(group,"play");
+		if (mc2000.state["shift"] === true && playing != 0) {engine.setValue(group,'reverseroll',!(engine.getValue(group,'reverseroll')));return;}
     if (value) {
-  engine.setValue(group, 'play', !(engine.getValue(group, 'play')));
+			if(engine.getValue(group,'reverseroll')==1){
+			engine.setValue(group,'reverseroll',0);
+			return;
+		}
+  engine.setValue(group, 'play', !(playing));
 }
 };
 
@@ -613,6 +619,7 @@ mc2000.pregain = function (channel, control, value, status, group) {
   engine.setParameter(group, "pregain", script.absoluteLin(value,0,1));
 //  engine.setValue(group, 'pregain', script.absoluteLin(value, 0, 4));
 };
+
 mc2000.effects = function (channel, control, value, status, group) {
 	if(value){
   group = mc2000.deck[group];
@@ -728,6 +735,41 @@ engine.softTakeover("[QuickEffectRack1_"+group+"]", "super1",true);
 }
 };
 
+mc2000.fx1 = function (channel, control, value, status, group) {
+    if (value) {
+			if (mc2000.state["shift"] === true) {
+				engine.softTakeover("[EffectRack1_EffectUnit1_Effect1]", "parameter2",true);
+				engine.setParameter("[EffectRack1_EffectUnit1_Effect1]", "parameter2", script.absoluteLin(value,0,.99));
+				return;
+			}
+		engine.softTakeover("[EffectRack1_EffectUnit1]", "super1",true);
+		engine.setParameter("[EffectRack1_EffectUnit1]", "super1", script.absoluteLin(value,0,.99));
+
+}
+};
+
+mc2000.fx2 = function (channel, control, value, status, group) {
+    if (value) {
+engine.softTakeover("[EffectRack1_EffectUnit2]", "super1",true);
+		engine.setParameter("[EffectRack1_EffectUnit2]", "super1", script.absoluteLin(value,0,.99));
+
+}
+};
+
+mc2000.fx3 = function (channel, control, value, status, group) {
+    if (value) {
+engine.softTakeover("[EffectRack1_EffectUnit3]", "super1",true);
+		engine.setParameter("[EffectRack1_EffectUnit3]", "super1", script.absoluteLin(value,0,.99));
+
+}
+};
+mc2000.fx4 = function (channel, control, value, status, group) {
+    if (value) {
+engine.softTakeover("[EffectRack1_EffectUnit4]", "super1",true);
+		engine.setParameter("[EffectRack1_EffectUnit4]", "super1", script.absoluteLin(value,0,.99));
+
+}
+};
 mc2000.loop_double = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 	if(value){

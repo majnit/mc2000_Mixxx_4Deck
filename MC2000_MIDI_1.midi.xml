@@ -615,6 +615,42 @@
             </control>
             <control>
                 <group>[Channel1]</group>
+                <key>mc2000.fx1</key>
+                <status>0xB0</status>
+                <midino>0x56</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>mc2000.fx2</key>
+                <status>0xB0</status>
+                <midino>0x57</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>mc2000.fx3</key>
+                <status>0xB0</status>
+                <midino>0x59</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>mc2000.fx4</key>
+                <status>0xB0</status>
+                <midino>0x5A</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
                 <key>mc2000.fxtoggle</key>
                 <status>0x80</status>
                 <midino>0x24</midino>
