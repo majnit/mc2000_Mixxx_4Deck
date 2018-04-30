@@ -461,10 +461,11 @@ mc2000.wheelTouch = function(channel, control, value, status, group){
 				var alpha = 1.0/8;
         var beta = alpha/32;
         var rpm = 200.0;
-        if (mc2000.state["shift"] === true) // If shift is pressed, do a fast search
+        if (mc2000.state["shift"] === true && engine.getValue(group,"play") == 0) // If shift is pressed, do a fast search
         	rpm = 10.0;
-
-        engine.scratchEnable(deck, 128, rpm, alpha, beta, true);
+ if (engine.getValue(group,"play") == 0||mc2000.state["shift"] === true) {
+        engine.scratchEnable(deck, 228, rpm, alpha, beta, true);
+			}
     }
     else {    // If button up
         engine.scratchDisable(deck);
@@ -482,7 +483,7 @@ var deck = mc2000.group2Deck(group);
    var newValue=(value-64);
 
     engine.scratchTick(deck,newValue);
- if ( engine.isScratching(deck)) {
+ if ( engine.isScratching(deck)||mc2000.state["shift"] === true) {
 
 engine.scratchTick(deck,newValue);
   }
@@ -673,7 +674,9 @@ mc2000.pfl = function(channel, control, value, status, group) {
 mc2000.slipmode = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 	if(value){
-	engine.setValue(group, "slip_enabled", !(engine.getValue(group, 'slip_enabled')));
+	engine.setValue(group, "slip_enabled", 1);
+} else {
+	engine.setValue(group, "slip_enabled", 0);
 }
 }
 
@@ -718,6 +721,7 @@ mc2000.filterMid = function (channel, control, value, status, group) {
 		engine.setParameter("[EqualizerRack1_"+group+"_Effect1]", "parameter2", script.absoluteLin(value,0,.99));
 }
 };
+
 mc2000.filterLow = function (channel, control, value, status, group) {
     group = mc2000.deck[group];
     if (value) {
@@ -786,7 +790,6 @@ mc2000.loop_halve = function(channel, control, value, status, group) {
 
 mc2000.beatloop_2_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
-
 	engine.setValue(group, "beatloop_1_toggle", !(engine.getValue(group, 'beatloop_1_toggle')));
 
 }
