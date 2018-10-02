@@ -795,15 +795,21 @@ mc2000.loop_halve = function(channel, control, value, status, group) {
 
 mc2000.beatloop_2_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
-	engine.setValue(group, "beatloop_1_toggle", !(engine.getValue(group, 'beatloop_1_toggle')));
 
+ if (engine.getValue(group,"slip_enabled")==1) {
+		engine.setValue(group, "beatloop_0.5_toggle", !(engine.getValue(group, 'beatloop_0.5_toggle')));
+ } else {
+	 	engine.setValue(group, "beatloop_1_toggle", !(engine.getValue(group, 'beatloop_1_toggle')));
+ }
 }
 
 mc2000.beatloop_4_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
-
+	if (engine.getValue(group,"slip_enabled")==1) {
+ 		engine.setValue(group, "beatloop_1_toggle", !(engine.getValue(group, 'beatloop_1_toggle')));
+  } else {
 	engine.setValue(group, "beatloop_2_toggle", !(engine.getValue(group, 'beatloop_2_toggle')));
-
+}
 }
 mc2000.beatloop_8_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
