@@ -463,7 +463,7 @@ mc2000.wheelTouch = function(channel, control, value, status, group){
         var rpm = 200.0;
         if (mc2000.state["shift"] === true && engine.getValue(group,"play") == 0) // If shift is pressed, do a fast search
         	rpm = 10.0;
- if (engine.getValue(group,"play") == 0||mc2000.state["shift"] === true) {
+ if (engine.getValue(group,"play") == 0||mc2000.state["shift"] === true||engine.getValue(group,"slip_enabled")==1) {
         engine.scratchEnable(deck, 228, rpm, alpha, beta, true);
 			}
     }
@@ -483,7 +483,7 @@ var deck = mc2000.group2Deck(group);
    var newValue=(value-64);
 
     engine.scratchTick(deck,newValue);
- if ( engine.isScratching(deck)||mc2000.state["shift"] === true) {
+ if ( engine.isScratching(deck)||mc2000.state["shift"] === true||engine.getValue(group,"slip_enabled") ) {
 
 engine.scratchTick(deck,newValue);
   }
