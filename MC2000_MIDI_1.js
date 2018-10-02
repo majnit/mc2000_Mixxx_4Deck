@@ -742,8 +742,8 @@ engine.softTakeover("[QuickEffectRack1_"+group+"]", "super1",true);
 mc2000.fx1 = function (channel, control, value, status, group) {
     if (value) {
 			if (mc2000.state["shift"] === true) {
-				engine.softTakeover("[EffectRack1_EffectUnit1_Effect1]", "parameter2",true);
-				engine.setParameter("[EffectRack1_EffectUnit1_Effect1]", "parameter2", script.absoluteLin(value,0,.99));
+				engine.softTakeover("[EffectRack1_EffectUnit1_Effect1]", "parameter1",true);
+				engine.setParameter("[EffectRack1_EffectUnit1_Effect1]", "parameter1", script.absoluteLin(value,0,.99));
 				return;
 			}
 		engine.softTakeover("[EffectRack1_EffectUnit1]", "super1",true);
@@ -754,6 +754,11 @@ mc2000.fx1 = function (channel, control, value, status, group) {
 
 mc2000.fx2 = function (channel, control, value, status, group) {
     if (value) {
+			if (mc2000.state["shift"] === true) {
+				engine.softTakeover("[EffectRack1_EffectUnit2_Effect1]", "parameter1",true);
+				engine.setParameter("[EffectRack1_EffectUnit2_Effect1]", "parameter1", script.absoluteLin(value,0,.99));
+				return;
+			}
 engine.softTakeover("[EffectRack1_EffectUnit2]", "super1",true);
 		engine.setParameter("[EffectRack1_EffectUnit2]", "super1", script.absoluteLin(value,0,.99));
 
