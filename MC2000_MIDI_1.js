@@ -104,9 +104,9 @@ mc2000.init = function(id, debug) {
 		engine.connectControl("[Channel"+i+"]", "loop_enabled", "mc2000.loopEnableSetLed");
 
 		// FX 1-3
-		engine.connectControl("[Channel"+i+"]", "beatloop_1_enabled", "mc2000.beatLoopXSetLed");
 		engine.connectControl("[Channel"+i+"]", "beatloop_2_enabled", "mc2000.beatLoopXSetLed");
 		engine.connectControl("[Channel"+i+"]", "beatloop_4_enabled", "mc2000.beatLoopXSetLed");
+		engine.connectControl("[Channel"+i+"]", "beatloop_8_enabled", "mc2000.beatLoopXSetLed");
 
 		// Monitor cue
 		engine.connectControl("[Channel"+i+"]", "pfl", "mc2000.pflSetLed");
@@ -200,9 +200,9 @@ var channel = group[8];
 				'loop_start_position': 'mc2000.loopStartSetLed',
 				'loop_end_position': 'mc2000.loopEndSetLed',
 				'loop_enabled': 'mc2000.loopEnableSetLed',
-				'beatloop_1_enabled': 'mc2000.beatLoopXSetLed',
- 				'beatloop_2_enabled': 'mc2000.beatLoopXSetLed',
- 				'beatloop_4_enabled':'mc2000.beatLoopXSetLed',
+				'beatloop_2_enabled': 'mc2000.beatLoopXSetLed',
+ 				'beatloop_4_enabled': 'mc2000.beatLoopXSetLed',
+ 				'beatloop_8_enabled':'mc2000.beatLoopXSetLed',
 				'hotcue_1_enabled':'mc2000.hotcueSetLed',
 				'hotcue_2_enabled':'mc2000.hotcueSetLed',
 				'hotcue_3_enabled':'mc2000.hotcueSetLed',
@@ -489,9 +489,8 @@ engine.scratchTick(deck,newValue);
   }
 else {
  if (engine.getValue(group,"play") != 0) {
-
-engine.setValue(group,"jog", (value-0x40)/8);
-                          }
+engine.setValue(group,"jog", ((value)-0x40)/10);
+      }
  }
 };
 
@@ -555,7 +554,7 @@ mc2000.loopEnableSetLed = function(value, group, control) {
 mc2000.beatLoopXSetLed = function(value, group, control) {
 
 	var deck = mc2000.group2Deck(group);if(deck>2){deck-=2;}
-	var noEfx = mc2000.loop2NoEfx(control[9]*2);
+	var noEfx = mc2000.loop2NoEfx(control[9]);
 
 	// From the spec, all fx leds are in MIDI CH1 range.
 	// First parameter is hardcoded.
@@ -797,24 +796,27 @@ mc2000.beatloop_2_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 
  if (engine.getValue(group,"slip_enabled")==1) {
-		engine.setValue(group, "beatloop_0.5_toggle", !(engine.getValue(group, 'beatloop_0.5_toggle')));
+		engine.setValue(group, "beatloop_0.25_toggle", !(engine.getValue(group, 'beatloop_0.25_toggle')));
  } else {
-	 	engine.setValue(group, "beatloop_1_toggle", !(engine.getValue(group, 'beatloop_1_toggle')));
+	 	engine.setValue(group, "beatloop_2_toggle", !(engine.getValue(group, 'beatloop_2_toggle')));
  }
 }
 
 mc2000.beatloop_4_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
 	if (engine.getValue(group,"slip_enabled")==1) {
- 		engine.setValue(group, "beatloop_1_toggle", !(engine.getValue(group, 'beatloop_1_toggle')));
+ 		engine.setValue(group, "beatloop_0.5_toggle", !(engine.getValue(group, 'beatloop_0.5_toggle')));
   } else {
-	engine.setValue(group, "beatloop_2_toggle", !(engine.getValue(group, 'beatloop_2_toggle')));
+	engine.setValue(group, "beatloop_4_toggle", !(engine.getValue(group, 'beatloop_4_toggle')));
 }
 }
 mc2000.beatloop_8_toggle = function(channel, control, value, status, group) {
   group = mc2000.deck[group];
-
-	engine.setValue(group, "beatloop_4_toggle", !(engine.getValue(group, 'beatloop_4_toggle')));
+	if (engine.getValue(group,"slip_enabled")==1) {
+ 		engine.setValue(group, "beatloop_1_toggle", !(engine.getValue(group, 'beatloop_1_toggle')));
+  } else {
+	engine.setValue(group, "beatloop_8_toggle", !(engine.getValue(group, 'beatloop_8_toggle')));
+}
 }
 
 mc2000.reloop_exit = function(channel, control, value, status, group) {
